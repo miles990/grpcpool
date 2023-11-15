@@ -42,15 +42,11 @@ func (p *ConnPool) Resize(newSize int) {
 }
 
 func (p *ConnPool) Get() *grpc.ClientConn {
-	if len(p.pool) == 0 {
-		panic("grpc pool is empty")
-		return nil
-	}
 	return <-p.pool
 }
 
 func (p *ConnPool) Put(conn *grpc.ClientConn) {
-	p.pool <- conn
+	// p.pool <- conn
 
 	// 如果池已經滿了，關閉並釋放連接，否則放回池中
 	if len(p.pool) == cap(p.pool) {
